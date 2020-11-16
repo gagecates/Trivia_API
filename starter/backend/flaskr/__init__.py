@@ -8,16 +8,16 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-def paginate_questions(request, selection):
+def paginate_questions(request, all_questions):
 
   page = request.args.get('page', 1, type=int)
   start =  (page - 1) * QUESTIONS_PER_PAGE
   end = start + QUESTIONS_PER_PAGE
 
-  questions = [question.format() for question in selection]
-  current_questions = questions[start:end]
+  questions = [question.format() for question in all_questions]
+  page_questions = questions[start:end]
 
-  return current_questions
+  return page_questions
 
 def create_app(test_config=None):
   # create and configure the app
@@ -68,16 +68,15 @@ def create_app(test_config=None):
 
   @app.route('/questions')
   def retrieve_questions():
-    questions = Question.query.order_by(Question.id).all()
-    page_questions = paginate_questions(request, selection)
+    all_questions = Question.query.order_by(Question.id).all()
+    page_questions = paginate_questions(request, all_questions)
     categories = Category.query.order_by(Category.type).all()
 
     return jsonify({
       'success': True,
-      'questions': current_questions,
-      'total_questions': len(selection),
+      'questions': page_questions,
+      'total_questions': len(all_questions),
       'categories': {category.id: category.type for category in categories},
-      'current_category': None
     })
 
   '''
@@ -87,6 +86,18 @@ def create_app(test_config=None):
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
+
+  @app.route('/questions/<question_id>', methods=['DELETE'])
+  def delete_question(question_id):
+    try:
+      question = Question.query.get(question_id)
+      question.delete()
+      return jsonify({
+        'success':True,
+        'question deleted': question_id
+      })
+    except:
+      abort(422)
 
   '''
   @TODO: 
