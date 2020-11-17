@@ -110,7 +110,7 @@ def create_app(test_config=None):
   of the questions list in the "List" tab.  
   '''
 
-  @app.route('/questions', methods=['POST'])
+  @app.route('/questions/add', methods=['POST'])
   def add_question():
     try:
       question_data = request.get_json()
@@ -149,6 +149,27 @@ def create_app(test_config=None):
   Try using the word "title" to start. 
   '''
 
+
+  @app.route('/questions', methods=['POST'])
+  def search_questions():
+    search_data = request.get_json()
+    search_term = search_data.get('searchTerm')
+
+    try:
+       all_questions = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
+       search_results = paginate_questions(request, all_questions)
+
+       return jsonify({
+         'success': True,
+         'questions': search_results,
+         'total_questions': len(all_questions),
+         'current_category': None 
+       })
+
+    except:
+      abort(404)
+
+
   '''
   @TODO: 
   Create a GET endpoint to get questions based on category. 
@@ -156,6 +177,7 @@ def create_app(test_config=None):
   TEST: In the "List" tab / main screen, clicking on one of the 
   categories in the left column will cause only questions of that 
   category to be shown. 
+
   '''
 
 
