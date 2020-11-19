@@ -150,7 +150,7 @@ def create_app(test_config=None):
   '''
 
 
-  @app.route('/questions', methods=['POST'])
+  @app.route('/questions/search', methods=['POST'])
   def search_questions():
     search_data = request.get_json()
     search_term = search_data.get('searchTerm')
@@ -180,6 +180,23 @@ def create_app(test_config=None):
 
   '''
 
+  @app.route('/categories/<int:category_id>/questions')
+  def get_category_questions(category_id):
+    
+    try:
+      all_questions = Question.query.filter(Question.category == category_id).all()
+      search_results = paginate_questions(request, all_questions)
+
+      return jsonify({
+        'success': True,
+        'questions': search_results,
+        'total_questions': len(all_questions),
+        'current_category': category_id
+      })
+
+    except:
+      abort(404)
+
 
   '''
   @TODO: 
@@ -191,9 +208,38 @@ def create_app(test_config=None):
   TEST: In the "Play" tab, after a user selects "All" or a category,
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
-  '''
 
   '''
+
+  @app.route('/quizzes', methods=['POST'])
+  def play_game():
+
+    try:
+      request_data = request.get_json()
+      category = request_data.get('quiz_category')
+      previous_question = request_data.get('previous_questions')
+
+      if category['id'] == 0:
+        questions = Question.query.filter(Question.question!=previous_question).all()
+
+      else:
+        questions = Question.query.filter(Question.category==category['id'], Question.question!=previous_question).all()
+
+      question = random.choice(questions).format()
+
+      return jsonify({
+
+        'success': True,
+        'question': question
+
+      })
+
+    except:
+      print('fucked up mate')
+      abort(404)
+
+  '''
+
   @TODO: 
   Create error handlers for all expected errors 
   including 404 and 422. 
