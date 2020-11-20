@@ -1,0 +1,21 @@
+To run program:
+
+Be sure that node is installed.
+Install all in the backend/requirements.txt file.
+
+To run front end server:
+
+navigate to frontend directory.
+enter npm start to runs server on localhost:3000
+
+
+To run flask server:
+
+navigate to backend/flaskr directory.
+set flask app variable
+enable debug
+enable dev mode
+flask run
+
+
+
