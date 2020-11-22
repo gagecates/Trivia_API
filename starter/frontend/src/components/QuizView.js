@@ -3,7 +3,6 @@ import $ from 'jquery';
 
 import '../stylesheets/QuizView.css';
 
-const questionsPerPlay = 5; 
 
 class QuizView extends Component {
   constructor(props){
@@ -15,6 +14,7 @@ class QuizView extends Component {
         categories: {},
         numCorrect: 0,
         currentQuestion: {},
+        questionsPerPlay: 0,
         guess: '',
         forceEnd: false
     }
@@ -35,6 +35,8 @@ class QuizView extends Component {
     })
   }
 
+  
+
   selectCategory = ({type, id=0}) => {
     this.setState({quizCategory: {type, id}}, this.getNextQuestion)
   }
@@ -45,6 +47,7 @@ class QuizView extends Component {
 
   getNextQuestion = () => {
     const previousQuestions = [...this.state.previousQuestions]
+    const questionsPerPlay = [...this.state.questionsPerPlay]
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
 
     $.ajax({
@@ -65,6 +68,7 @@ class QuizView extends Component {
           showAnswer: false,
           previousQuestions: previousQuestions,
           currentQuestion: result.question,
+          questionsPerPlay: result.question_count,
           guess: '',
           forceEnd: result.question ? false : true
         })
