@@ -229,31 +229,39 @@ def create_app(test_config=None):
             request_data = request.get_json()
             category = request_data.get('quiz_category')
             previous_question = request_data.get('previous_questions')
-            
+
             if category['id'] == 0:
+                initial_question_count = len(Question.query.filter.all())
                 questions = Question.query.filter(
                             Question.id.notin_(previous_question)).all()
 
             else:
+                initial_question_count = len(Question.query.filter(Question.category == category['id']).all())
                 questions = Question.query.filter(
                             Question.category == category['id'],
                             Question.id.notin_(previous_question)).all()
 
-            question = random.choice(questions).format()
-            question_count = len(questions)
+            if len(questions) == 0:
+                question = {} 
+                last_question = True
+
+            else:
+                last_question = False
+                question = random.choice(questions).format()
             
+            
+
 
             return jsonify({
 
                 'success': True,
                 'question': question,
-                'question_count': question_count
-
+                'last_question': last_question
 
             })
 
-        except BaseException:
-            abort(404)
+        except:
+            abort(400)
 
     '''
 

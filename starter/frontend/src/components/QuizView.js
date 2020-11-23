@@ -14,7 +14,7 @@ class QuizView extends Component {
         categories: {},
         numCorrect: 0,
         currentQuestion: {},
-        questionsPerPlay: 0,
+        lastQuestion: false,
         guess: '',
         forceEnd: false
     }
@@ -47,7 +47,6 @@ class QuizView extends Component {
 
   getNextQuestion = () => {
     const previousQuestions = [...this.state.previousQuestions]
-    const questionsPerPlay = [...this.state.questionsPerPlay]
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
 
     $.ajax({
@@ -68,7 +67,7 @@ class QuizView extends Component {
           showAnswer: false,
           previousQuestions: previousQuestions,
           currentQuestion: result.question,
-          questionsPerPlay: result.question_count,
+          lastQuestion: result.last_question,
           guess: '',
           forceEnd: result.question ? false : true
         })
@@ -154,7 +153,7 @@ class QuizView extends Component {
   }
 
   renderPlay(){
-    return this.state.previousQuestions.length === questionsPerPlay || this.state.forceEnd
+    return  this.state.forceEnd || this.state.lastQuestion
       ? this.renderFinalScore()
       : this.state.showAnswer 
         ? this.renderCorrectAnswer()
