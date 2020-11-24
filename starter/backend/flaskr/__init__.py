@@ -79,7 +79,6 @@ def create_app(test_config=None):
             })
         except BaseException:
             abort(422)
-
     
 
     @app.route('/questions/add', methods=['POST'])
