@@ -52,34 +52,25 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
-## Tasks
 
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
 
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
+AP Endpoints
 
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
 GET '/categories'
 GET ...
 POST ...
 DELETE ...
 
 GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
+
+- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category.
+- Returns JSON:({
+    'success': (true/false)
+    'categories': categories as dictonaries
+
+})
+    
+
 {'1' : "Science",
 '2' : "Art",
 '3' : "Geography",
@@ -87,14 +78,110 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
-```
+GET '/questions'
+
+- Fetches a dictionary of questions in wich keys are the ids and the   value is the corresponding string of the category.
+- Arguments: Page #
+- Returns JSON:({
+    'success': (true/false)
+    'qeuestions': list of paginated questions as dictonaries
+    'total_questions': length of qestions
+    'categories': categories as dictonaries
+})
 
 
-## Testing
-To run the tests, run
-```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
-```
+DELETE '/questions/<question_id>'
+
+- Deletes specific question.
+- Arguments: Question id
+- Returns JSON:({
+    'success': (true/false)
+    'question_deleted': id of question deleted
+
+})
+    
+
+POST '/questions/add'
+
+-  Adds a new question as a dictonary to the list of question
+- Arguments: 
+    new_question
+    new_answer
+    new_difficulty
+    new_category
+
+- Returns JSON:({
+    'success': (true/false)
+    'question_added': Newly created question's id
+
+})
+    
+
+POST '/questions/search'
+
+- Fetches a list of questions based on a specific search term.
+- Arguments: Search term
+- Returns JSON:({
+    'success': (true/false)
+    'question': queried question matching search term
+    'total_questions': integer
+    'current_category': current category id
+
+})
+    
+
+GET '/categories/<int:category_id>/questions'
+
+- Fetches a dictionary of questions based on a specific category
+- Arguments: Category id
+- Returns JSON:({
+    'success': (true/false)
+    'questions': list of paginated questions
+    'total_questions': integer
+    'current_category': category id
+
+})
+    
+
+POST '/quizzes'
+
+- Plays the Trivia game.
+- Arguments:
+    previous questions: list of question id's already used
+    quiz_category: category id picked by user
+
+- Returns JSON:({
+    'sucess': (true/false)
+    'question': list of paginated questions
+    'last_question': (true/false)
+
+})
+    
+
+errorhandler(400)
+
+- Bad request error
+- Returns JSON:({
+    success value: (true/false)
+    error: 400
+    message: 'bad request'
+})
+
+errorhandler(404)
+
+- Not found error
+- Returns JSON:({
+    success value: (true/false)
+    error: 404
+    message: 'resource not found'
+})
+
+errorhandler(422)
+
+- Unprocessable error
+- Returns JSON:({
+    success value: (true/false)
+    error: 422
+    message: 'unprocessable'
+})
+
