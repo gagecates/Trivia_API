@@ -43,6 +43,16 @@ def create_app(test_config=None):
         return app.send_static_file('index.html')
     
 
+
+    @app.route('/play')
+    def index():
+        return app.send_static_file('index.html')
+
+        @app.route('/add')
+    def index():
+        return app.send_static_file('index.html')
+
+
     @app.route('/categories')
     def retrieve_categories():
         categories = Category.query.order_by(Category.type).all()
