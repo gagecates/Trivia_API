@@ -226,3 +226,9 @@ def create_app(test_config=None):
         }), 422
 
     return app
+
+app = create_app()
+
+
+if __name__ == '__main__':
+    app.run()
