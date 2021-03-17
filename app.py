@@ -46,7 +46,6 @@ def create_app(test_config=None):
 
     @app.route('/play')
     def play():
-        console.log('heyyyyy')
         return app.send_static_file('index.html')
 
 
