@@ -49,7 +49,8 @@ def create_app(test_config=None):
         console.log('heyyyyy')
         return app.send_static_file('index.html')
 
-        @app.route('/add')
+
+    @app.route('/add')
     def add():
         return app.send_static_file('index.html')
 
