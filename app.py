@@ -23,7 +23,7 @@ def paginate_questions(request, all_questions):
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='./starter/frontend/build', static_url_path='/')
     setup_db(app)
 
 
@@ -37,6 +37,10 @@ def create_app(test_config=None):
             'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
+
+    @app.route('/')
+    def index():
+        return app.send_static_file('index.html')
     
 
     @app.route('/categories')
@@ -231,4 +235,4 @@ app = create_app()
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
