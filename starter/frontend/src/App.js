@@ -20,9 +20,9 @@ class App extends Component {
       <Header path />
       <Router>
         <Switch>
-          <Route path="/" exact component={QuestionView} />
-          <Route path="/add" component={FormView} />
-          <Route path="/play" component={QuizView} />
+          <Route path="https://trivia-app-gmc.herokuapp.com/" exact component={QuestionView} />
+          <Route path="https://trivia-app-gmc.herokuapp.com/add" component={FormView} />
+          <Route path="https://trivia-app-gmc.herokuapp.com/play" component={QuizView} />
           <Route component={QuestionView} />
         </Switch>
       </Router>
