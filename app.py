@@ -45,11 +45,11 @@ def create_app(test_config=None):
 
 
     @app.route('/play')
-    def index():
+    def play():
         return app.send_static_file('index.html')
 
         @app.route('/add')
-    def index():
+    def add():
         return app.send_static_file('index.html')
 
 
